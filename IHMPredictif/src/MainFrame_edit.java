@@ -104,6 +104,7 @@ public class MainFrame_edit extends javax.swing.JFrame {
             }
         ));
         jTable1.setAutoCreateRowSorter(true);
+        jTable1.setEnabled(false);
         jTable1.setShowGrid(false);
         jScrollPane1.setViewportView(jTable1);
 
