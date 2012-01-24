@@ -38,7 +38,7 @@ public class LoginFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Predictif - Connexion");
 
-        jTextField1.setText("Pierre");
+        jTextField1.setText("5205");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -47,7 +47,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
         jTextField2.setText("•••••••••••");
 
-        jLabel1.setText("Nom d'utilisateur");
+        jLabel1.setText("Numéro d'employé");
 
         jLabel2.setText("Mot de passe");
 
@@ -64,8 +64,8 @@ public class LoginFrame extends javax.swing.JFrame {
                         .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                             .add(jTextField2)
                             .add(jTextField1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                            .add(jLabel1)
-                            .add(jLabel2)))
+                            .add(jLabel2)
+                            .add(jLabel1)))
                     .add(jPanel1Layout.createSequentialGroup()
                         .add(290, 290, 290)
                         .add(jButton1)))
