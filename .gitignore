@@ -3,6 +3,7 @@
 *.out
 *.lock
 *.swp
+*.dropbox
 
 # Window-specific #
 Thumbs.db
