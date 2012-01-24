@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Prédict'If - Réaliser un horoscope</title>
+	<link href="http://localhost:8888/LogicielTrez/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="http://localhost:8888/LogicielTrez/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="./Budgets_files/cake.generic.css"><link rel="stylesheet" type="text/css" href="./Budgets_files/style.css">
+</head>
+<body>
+	<div id="container">
+		<div id="header">
+			<h1 style="font-size: 2em; font-weight: bold; padding-top: 10px;">Prédict'If</h1>
+			<div class="user_info">
+					Bonjour, Pierre - <a href="http://localhost:8888/LogicielTrez/users/logout">Se déconnecter</a>
+			</div>
+		</div>
+		<div id="content">
+			<div class="budgets form">
+				<form action="./Budgets_files/Budgets.html" id="BudgetAddForm" method="post" accept-charset="utf-8">
+				<fieldset>
+					<legend>Réaliser un horoscope pour <span style="border-bottom: 1px dashed rgb(238, 51, 34);">Pierre Fouchet</span></legend>
+					<p>
+						<b>Infos client :</b><br />
+						Pierre Fouchet<br />
+						Numéro client : 1<br />
+						Né le 21/10/1991<br />
+						Signe astrologique : Poisson
+					</p>
+					<div class="input select">
+						<label for="BudgetExerciceId">Signature</label>
+						<select name="data[Budget][exercice_id]" id="BudgetExerciceId">
+							<option value="1">Sybille</option>
+							<option value="2">Madame Soleil</option>
+							<option value="2">Delphine</option>
+						</select>
+					</div>
+					<div class="input select">
+						<label for="BudgetExerciceId">Prédiction - Travail</label>
+						<select name="data[Budget][exercice_id]" id="BudgetExerciceId" style="max-width: 700px;">
+							<option value="1">5 - Une nouvelle importante pourrait tomber aujourd'hui et pourrait vous donner l'envie d'entamer des démarches pour faire progresser votre carrière (***)</option>
+							<option value="2">6 - Vous ferez aujourd'hui le bonheur de vos collègues qui apprécieront votre soutien, mais aussi et surtout, votre esprit d'équipe qui sera développé comme jamais (***)</option>
+						</select>
+					</div>
+					<div class="input select">
+						<label for="BudgetExerciceId">Prédiction - Santé</label>
+						<select name="data[Budget][exercice_id]" id="BudgetExerciceId" style="max-width: 700px;">
+							<option value="1">18 - Il vous faudra rester vigilant, vous pourriez attraper un gros rhume (#)</option>
+						</select>
+					</div>
+					<div class="input select">
+						<label for="BudgetExerciceId">Prédiction - Amour</label>
+						<select name="data[Budget][exercice_id]" id="BudgetExerciceId" style="max-width: 700px;">
+							<option value="1">24 - En ce qui concerne votre vie sentimentale actuelle ou à venir, votre charme sera sûr d'opérer (++++)</option>
+						</select>
+					</div>
+				</fieldset>
+				<div class="submit"><input type="submit" value="Réaliser l'horoscope"></div>
+				</form>
+			</div>
+		</div>
+		<div id="footer">
+			&copy;2012 INSA de Lyon - Informatique - B3326
+		</div>
+	</div>
+</body>
+</html>

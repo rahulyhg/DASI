@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Prédict'If - Connexion</title>
+	<link href="http://localhost:8888/LogicielTrez/favicon.ico" type="image/x-icon" rel="icon">
+	<link href="http://localhost:8888/LogicielTrez/favicon.ico" type="image/x-icon" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="./Users_files/cake.generic.css"><link rel="stylesheet" type="text/css" href="./Users_files/style.css"></head>
+<body>
+	<div id="container">
+		<div id="header">
+			<h1 style="font-size: 2em; font-weight: bold; padding-top: 10px;">Prédict'If</h1>
+		</div>
+		<div id="content">
+			<div class="users form">
+				<form action="./Users_files/Users.html" id="UserLoginForm" method="post" accept-charset="utf-8">
+					<div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
+					<fieldset>
+	        			<legend>Veuillez rentrer votre nom d'utilisateur et votre mot de passe</legend>
+	    				<div class="input text required">
+	    					<label for="UserUsername">Nom d'utilisateur</label>
+	    					<input name="data[User][username]" maxlength="255" type="text" id="UserUsername" value="Pierre">
+	    				</div>
+	    				<div class="input password required">
+	    					<label for="UserPassword">Mot de passe</label>
+	    					<input name="data[User][password]" type="password" id="UserPassword" value="youcantseeme">
+	    				</div>
+	    			</fieldset>
+					<div class="submit">
+						<input type="submit" value="Se connecter">
+					</div>
+				</form>
+			</div>
+		</div>
+		<div id="footer">
+			&copy;2012 INSA de Lyon - Informatique - B3326
+		</div>
+	</div>	
+</body>
+</html>
