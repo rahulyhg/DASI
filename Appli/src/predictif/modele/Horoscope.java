@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package predictif.modele;
 
 import javax.persistence.Entity;
@@ -19,31 +18,29 @@ import predictif.modele.Predictions.TravailPrediction;
  * @author Administrateur
  */
 @Entity
-public class Horoscope {
+public class Horoscope
+{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int numHoroscope;
-
     @ManyToOne
     private Medium medium;
-
     @ManyToOne
     private AmourPrediction amour;
-
     @ManyToOne
     private TravailPrediction travail;
-
     @ManyToOne
     private SantePrediction sante;
-
     @ManyToOne
     private Client leClient;
 
-    public Horoscope() {
+    public Horoscope()
+    {
     }
 
-    public Horoscope(Medium medium, AmourPrediction amour, TravailPrediction travail, SantePrediction sante, Client leClient) {
+    public Horoscope(Medium medium, AmourPrediction amour, TravailPrediction travail, SantePrediction sante, Client leClient)
+    {
         this.medium = medium;
         this.amour = amour;
         this.travail = travail;
@@ -51,10 +48,35 @@ public class Horoscope {
         this.leClient = leClient;
     }
 
-    public void setLeClient(Client leClient)
+    public AmourPrediction getAmour()
     {
-        this.leClient = leClient;
+        return amour;
+    }
+
+    public Client getLeClient()
+    {
+        return leClient;
+    }
+
+    public Medium getMedium()
+    {
+        return medium;
+    }
+
+    public int getNumHoroscope()
+    {
+        return numHoroscope;
+    }
+
+    public SantePrediction getSante()
+    {
+        return sante;
+    }
+
+    public TravailPrediction getTravail()
+    {
+        return travail;
     }
     
-
+    
 }

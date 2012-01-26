@@ -4,7 +4,10 @@
  */
 package predictif.service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.EntityTransaction;
 import predictif.dao.ClientDao;
@@ -24,22 +27,36 @@ import predictif.util.JpaUtil;
  *
  * @author Pitou
  */
-public class PreparationBD
+public class PrepareBD
 {
-
+    protected Service service;
+    
     protected EmployeDao employeDao;
     protected MediumDao mediumDao;
     protected SigneAstrologiqueDao signeDao;
     protected PredictionDao predictionDao;
     protected ClientDao clientDao;
+    public static MessageDigest messageDigest;
 
-    public PreparationBD()
+    public PrepareBD()
     {
+        AmourPrediction.setSigle();
+        SantePrediction.setSigle();
+        TravailPrediction.setSigle();
         employeDao = EmployeDao.getInstance();
         mediumDao = MediumDao.getInstance();
         signeDao = SigneAstrologiqueDao.getInstance();
         predictionDao = PredictionDao.getInstance();
         clientDao = ClientDao.getInstance();
+        service = new Service();
+        try
+        {
+             messageDigest = MessageDigest.getInstance("MD5");
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            System.out.println("Erreur d'algorithme");
+        }
     }
 
     /**
@@ -51,16 +68,16 @@ public class PreparationBD
      *  <li>Médiums</li>
      * </ul>
      */
-    public void preparerBD()
+    public void populate()
     {
 
         ArrayList<Employe> employes = new ArrayList<Employe>();
-        employes.add(new Employe("Thibaut", "Bernard", "hashedpasswd"));
-        employes.add(new Employe("Boris", "Aloin", "hashedpasswd"));
-        employes.add(new Employe("Jean", "Durand", "hashedpasswd"));
-        employes.add(new Employe("Jean", "Dupond", "hashedpasswd"));
-        employes.add(new Employe("Gosouep", "Dasilva", "hashedpasswd"));
-        employes.add(new Employe("Icare", "Rodriguez", "hashedpasswd"));
+        employes.add(createEmploye("Thibaut", "Bernard", "hashedpasswd"));
+        employes.add(createEmploye("Boris", "Aloin", "hashedpasswd"));
+        employes.add(createEmploye("Jean", "Durand", "hashedpasswd"));
+        employes.add(createEmploye("Jean", "Dupond", "hashedpasswd"));
+        employes.add(createEmploye("Gosouep", "Dasilva", "hashedpasswd"));
+        employes.add(createEmploye("Icare", "Rodriguez", "hashedpasswd"));
 
         ArrayList<SigneAstrologique> signes = new ArrayList<SigneAstrologique>();
         signes.add(new SigneAstrologique("Bélier", 21, 19, 3, 4));
@@ -131,7 +148,52 @@ public class PreparationBD
         finally
         {
             JpaUtil.closeEntityManager();
+            addClients();
         }
     }
 
+    //Permet de tester la fonction permettant de calculer le min
+    public void addClients()
+    {
+        GregorianCalendar calendar = new GregorianCalendar(1991, 10, 21);
+        List<Medium> mediums = service.getAllMediums();
+        List<Employe> employes = getAllEmployes();
+        service.createClient("fouchet", "pierre", "rue titi", "jean@email", "0665642480", calendar,mediums, employes.get(0));
+        service.createClient("fouchet2", "pierre", "rue titi", "jean@email", "0665642480", calendar,mediums, employes.get(0));
+        service.createClient("fouchet3", "pierre", "rue titi", "jean@email", "0665642480", calendar,mediums,employes.get(1));
+        service.createClient("fouchet", "pierre", "rue titi", "jean@email", "0665642480", calendar,mediums, employes.get(1));
+        service.createClient("fouchet2", "pierre", "rue titi", "jean@email", "0665642480", calendar,mediums, employes.get(2));
+        service.createClient("fouchet3", "pierre", "rue titi", "jean@email", "0665642480", calendar,mediums,employes.get(2));
+        service.createClient("fouchet", "pierre", "rue titi", "jean@email", "0665642480", calendar,mediums, employes.get(3));
+        service.createClient("fouchet2", "pierre", "rue titi", "jean@email", "0665642480", calendar,mediums, employes.get(3));
+        service.createClient("fouchet2", "pierre", "rue titi", "jean@email", "0665642480", calendar,mediums, employes.get(5));
+    }
+    
+        
+    public List<Employe> getAllEmployes()
+    {
+         List<Employe> employes = null;
+        JpaUtil.openEntityManager();
+        
+        try
+        {
+            employes = employeDao.findAllEmploye();
+        }
+        catch (Exception e)
+        {
+            System.out.println("erreur getAllEmployes service : "+e.getMessage());
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return employes;
+        }       
+    }
+    
+    public Employe createEmploye(String nom, String prenom, String mdp)
+    {
+        byte[] passwd = messageDigest.digest(mdp.getBytes());
+        Employe employe = new Employe(nom, prenom, passwd);
+        return employe;
+    }
 }

@@ -4,9 +4,11 @@
  */
 package predictif.service;
 
+import java.security.MessageDigest;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import predictif.dao.ClientDao;
 import predictif.dao.EmployeDao;
 import predictif.dao.HoroscopeDao;
@@ -31,60 +33,10 @@ import predictif.util.JpaUtil;
 public class Service
 {
 
-    public void createClient(String nom, String prenom, String adresse, String email, String tel, GregorianCalendar dateNaissance, List<Medium> mediums)
+    public enum PredictionType
     {
-        Employe referent = findMinReferent();
-        
-        Client leClient = new Client(nom, prenom, adresse, email, tel, dateNaissance, calculerSigneAstro(dateNaissance), mediums, referent);
-        EntityTransaction tx = null;
-        
-        JpaUtil.openEntityManager();
-        
-        try
-        {
-            tx = JpaUtil.getEntityManagerTransaction();
-            tx.begin();
-            clientDao.create(leClient);
-            tx.commit();
-            System.out.println("commit createClient ok");
-        }
-        catch (Exception e)
-        {
-            System.out.println("Erreur rencontrée au createClient : " + e.toString());
-            if (tx != null && tx.isActive())
-            {
-                tx.rollback();
-            }
-        }
-        finally
-        {
-            JpaUtil.closeEntityManager();
-        }
-    }
-    
-    private Employe findMinReferent()
-    {
-          Employe referent = null;
-        
-        JpaUtil.openEntityManager();
-        
-        try
-        {
-            referent = employeDao.findMinusEmploye();
-            System.out.println("findMinReferent ok");
-        }
-        catch (Exception e)
-        {
-            System.out.println("Erreur rencontrée au findMinReferent : " + e.toString());
-        }
-        finally
-        {
-            JpaUtil.closeEntityManager();
-            return referent;
-        }      
-    }
-    
-    public enum TypePrediction {TRAVAIL, SANTE, AMOUR, TOUS};
+        TRAVAIL, SANTE, AMOUR, TOUS
+    };
     
     protected ClientDao clientDao;
     protected HoroscopeDao horoscopeDao;
@@ -104,12 +56,196 @@ public class Service
     }
 
     /**
-     * Méthode permettant de mettre à jour le signe astrologique d'un client
-     * @param client 
+     * Permet de créer un nouveau client en BD à partir des paramètres passés.
+     * L'attribut referent du client est valorisé via la méthode findMinReferent()
+     * @see findMinReferent()
+     * @param nom
+     * @param prenom
+     * @param adresse
+     * @param email
+     * @param tel
+     * @param dateNaissance
+     * @param mediums 
      */
-    public void calculerSigneAstro(Client client)
+    public boolean createClient(String nom, String prenom, String adresse, String email, String tel, GregorianCalendar dateNaissance, List<Medium> mediums)
     {
-        client.setSigneAstrologique(calculerSigneAstro(client.getDateNaissance()));
+        boolean status = false;
+        
+        Employe referent = findMinReferent();
+
+        Client leClient = new Client(nom, prenom, adresse, email, tel, dateNaissance, calculateSigne(dateNaissance), mediums, referent);
+        referent.getClients().add(leClient);
+
+        EntityTransaction tx = null;
+
+        JpaUtil.openEntityManager();
+
+        try
+        {
+            tx = JpaUtil.getEntityManagerTransaction();
+            tx.begin();
+            employeDao.update(referent);
+            tx.commit();
+            status = true;
+        }
+        catch (Exception e)
+        {
+            if (tx != null && tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return status;
+        }
+    }
+
+    /**
+     * Permet de créer un nouveau client en BD à partir des paramètres passés.
+     * @param nom
+     * @param prenom
+     * @param adresse
+     * @param email
+     * @param tel
+     * @param dateNaissance
+     * @param mediums
+     * @param referent 
+     */
+    public boolean createClient(String nom, String prenom, String adresse, String email, String tel, GregorianCalendar dateNaissance, List<Medium> mediums, Employe referent)
+    {
+        boolean status = false;
+        Client leClient = new Client(nom, prenom, adresse, email, tel, dateNaissance, calculateSigne(dateNaissance), mediums, referent);
+        referent.addClient(leClient);
+
+        EntityTransaction tx = null;
+
+        JpaUtil.openEntityManager();
+
+        try
+        {
+            tx = JpaUtil.getEntityManagerTransaction();
+            tx.begin();
+            employeDao.update(referent);
+            tx.commit();
+            status = true;
+        }
+        catch (Exception e)
+        {
+            if (tx != null && tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return status;
+        }
+    }
+
+    /**
+     * Permet de mettre à jour l'état interne du client présent en BD
+     * @param client le client que l'on souhaite mettre à jour
+     * @return true si la mise à jour s'est bien passée, faux sinon
+     */
+    public boolean updateClient(Client client)
+    {
+        boolean status = false;
+
+        Client autreVersionClient = retrieveClient(client.getNumClient());
+
+        if (client.isBirthModified(autreVersionClient))
+        {
+            client.setSigneAstrologique(calculateSigne(client.getDateNaissance()));
+        }
+
+        JpaUtil.openEntityManager();
+        EntityTransaction tx = null;
+
+        try
+        {
+            tx = JpaUtil.getEntityManagerTransaction();
+            tx.begin();
+            clientDao.update(client);
+            tx.commit();
+            status = true;
+        }
+        catch (Exception e)
+        {
+//            System.out.println("Erreur rencontrée au create : " + e.toString());
+            if (tx != null && tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return status;
+        }
+    }
+
+    /**
+     * Méthode permettant de supprimer un client du moyen de persistance
+     * @param client le client que l'on veut supprimer de la bd
+     * @return true si la suppression s'est bien passée, faux sinon
+     */
+    public boolean deleteClient(Client client)
+    {
+        boolean status = false;
+        JpaUtil.openEntityManager();
+        EntityTransaction tx = null;
+
+        try
+        {
+            tx = JpaUtil.getEntityManagerTransaction();
+            tx.begin();
+
+            clientDao.deleteClient(client);
+            tx.commit();
+            status = true;
+        }
+        catch (Exception e)
+        {
+            System.out.println("Erreur rencontrée au delete : " + e.toString());
+            if (tx != null && tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return status;
+        }
+    }
+
+    /**
+     * Méthode permettant de retrouver l'employé possédant le minimum de clients
+     * @return 
+     */
+    private Employe findMinReferent()
+    {
+        Employe referent = null;
+
+        JpaUtil.openEntityManager();
+
+        try
+        {
+            referent = employeDao.findMinusEmploye();
+            System.out.println("findMinReferent ok");
+        }
+        catch (Exception e)
+        {
+            System.out.println("Erreur rencontrée au findMinReferent : " + e.toString());
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return referent;
+        }
     }
 
     /**
@@ -120,15 +256,14 @@ public class Service
      * @param dateNaissance une date de naissance
      * @return le <code>SigneAstrologique</code> correspondant à la date de naissance
      */
-    public SigneAstrologique calculerSigneAstro(GregorianCalendar dateNaissance)
+    public SigneAstrologique calculateSigne(GregorianCalendar dateNaissance)
     {
         SigneAstrologique signe = null;
         JpaUtil.openEntityManager();
-        
+
         try
         {
             signe = signeDao.retrieve(dateNaissance);
-            System.out.println("commit update ok");
         }
         catch (Exception e)
         {
@@ -148,67 +283,24 @@ public class Service
      * retour peut valoir null si une erreur s'est passée sinon contient au minimum une liste
      * vide.
      */
-    public List<Client> getAllClients()    
+    public List<Client> getAllClients()
     {
         JpaUtil.openEntityManager();
-        
+
         List<Client> clients = null;
-        
-        try        
+
+        try
         {
             clients = clientDao.findAllClient();
-        }        
-        catch (Exception e)        
+        }
+        catch (Exception e)
         {
             System.out.println("Erreur getAllClients:" + e.getMessage());
         }
-        finally        
+        finally
         {
             JpaUtil.closeEntityManager();
             return clients;
-        }
-    }
-    
-    public void updateClient(Client client)
-    {
-        verifierDateNaissance(client);
-        JpaUtil.openEntityManager();
-        EntityTransaction tx = null;
-        
-        try        
-        {
-            tx = JpaUtil.getEntityManagerTransaction();
-            tx.begin();
-            clientDao.update(client);
-            tx.commit();
-            System.out.println("commit update ok");
-        }        
-        catch (Exception e)        
-        {
-            System.out.println("Erreur rencontrée au create : " + e.toString());
-            if (tx != null && tx.isActive())            
-            {
-                tx.rollback();
-            }
-        }
-        finally        
-        {
-            JpaUtil.closeEntityManager();
-        }
-    }
-
-    /**
-     * Méthode vérifiant si la date de naissance a été mise à jour par 
-     * l'utilisateur et le cas échéant met à jour son signe astrologique.
-     * @param client Le client dont on veut vérifier la date de naissance
-     */
-    private void verifierDateNaissance(Client client)
-    {
-        Client autreVersionClient = retrieveClient(client.getNumClient());
-        
-        if (client.naissancemodifie(autreVersionClient))
-        {
-            calculerSigneAstro(client);
         }
     }
 
@@ -229,7 +321,7 @@ public class Service
         }
         catch (Exception e)
         {
-            System.out.println("Erreur rencontrée au create : " + e.toString());
+            System.out.println("Erreur rencontrée au retrieve : " + e.toString());
         }
         finally
         {
@@ -237,52 +329,20 @@ public class Service
             return client;
         }
     }
-        
-    /**
-     * Méthode permettant de supprimer un client du moyen de persistance
-     * @param client le client que l'on veut supprimer de la bd
-     */
-    public void supprimerClient(Client client)
-    {
-        JpaUtil.openEntityManager();
-        EntityTransaction tx = null;
-        
-        try        
-        {
-            tx = JpaUtil.getEntityManagerTransaction();
-            tx.begin();
-            
-            clientDao.deleteClient(client);
-            tx.commit();
-            System.out.println("Le delete s'est déroulé normalement");
-        }        
-        catch (Exception e)        
-        {
-            System.out.println("Erreur rencontrée au delete : " + e.toString());
-            if (tx != null && tx.isActive())            
-            {
-                tx.rollback();
-            }
-        }        
-        finally        
-        {
-            JpaUtil.closeEntityManager();
-        }        
-    }
 
     public void createHoroscope(AmourPrediction amour, TravailPrediction travail, SantePrediction sante, Medium mediumChoisi, Client leClient)
     {
         Horoscope horo = new Horoscope(mediumChoisi, amour, travail, sante, leClient);
         leClient.addHoroscope(horo);
         JpaUtil.openEntityManager();
-        
+
         EntityTransaction tx = null;
-        
+
         try
         {
             tx = JpaUtil.getEntityManagerTransaction();
             tx.begin();
-          //  horoscopeDao.create(unHoro);
+            //  horoscopeDao.create(unHoro);
             clientDao.update(leClient);
             tx.commit();
             System.out.println("commit ok sur ajout horo");
@@ -298,116 +358,116 @@ public class Service
         finally
         {
             JpaUtil.closeEntityManager();
-        }        
+        }
     }
 
     /**
-     * Méthode permettant de vérifier l'identité de l'employé
+     * Méthode permettant de vérifier l'identité de l'employé. Il pourrait etre
+     * judicieux d'appeller cette méthode au travers d'une autre classe Service
+     * beaucoup plus proche de l'IHM web et contenant un boolean connected permettant
+     * de contrôler les méthodes pouvant être appelés.
      * @param codeEmploye le code de l'employé
      * @param passwd hashed
      */
-    public void verifierEmploye(int codeEmploye, String passwd)
+    public boolean connectEmploye(int codeEmploye, String passwd)
     {
+        boolean status = false;
         JpaUtil.openEntityManager();
         try
         {
-            if (employeDao.findEmploye(codeEmploye, passwd) != null)
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            byte[] mdp = messageDigest.digest(passwd.getBytes());
+            Employe employe = employeDao.findEmploye(codeEmploye);
+            if (MessageDigest.isEqual(mdp, employe.getPassword()))
             {
-                //Connexion Ok, passage écran suivant
+                status = true;
+                //Connexion Ok, le booleen status pourrait valoriser un booléen
+                //une variable instance de classe afin de contrôler les actions
+                //disponibles
             }
-            else
-            {
-                System.out.println("Erreur connexion, employe/mdp inexistant");
-            }
+        }
+        catch (NoResultException e)
+        {
+//            System.out.println("Erreur connexion, employe/mdp inexistant : " + e.getMessage());
+
         }
         catch (Exception e)
         {
-            System.out.println("Erreur technique : "+e.getMessage());
+            System.out.println("Erreur technique : " + e.getMessage());
         }
         finally
         {
             JpaUtil.closeEntityManager();
-        }   
+            return status;
+        }
     }
-    
+
     /**
      * Méthode permettant de récuperer toutes les prédictions d'un type
      * particulier. Types acceptés:
      * <ul>
-     *  <li>Service.TypePrediction.AMOUR</li>
-     *  <li>Service.TypePrediction.TRAVAIL</li>
-     *  <li>Service.TypePrediction.SANTE</li>
-     *  <li>Service.TypePrediction.TOUS permet de récuperer tous les types
+     *  <li>Service.PredictionType.AMOUR</li>
+     *  <li>Service.PredictionType.TRAVAIL</li>
+     *  <li>Service.PredictionType.SANTE</li>
+     *  <li>Service.PredictionType.TOUS permet de récuperer tous les types
      * précédemment cités</li>
      * </ul>
      * @param type le type de prédiction souhaité, variable de type enum
      * @return la <code>liste de <code>Prediction</code>
      */
-    public List<Prediction> getPrediction(TypePrediction type)
+    public List<Prediction> getPrediction(PredictionType type)
     {
         List<Prediction> predictions = null;
-        
+
         JpaUtil.openEntityManager();
         try
         {
-            switch(type)
+            switch (type)
             {
-                case AMOUR : predictions = predictionDao.getAllPredictionAmour();
+                case AMOUR:
+                    predictions = predictionDao.getAllPredictionAmour();
                     break;
-                case TRAVAIL : predictions = predictionDao.getAllPredictionTravail();
+                case TRAVAIL:
+                    predictions = predictionDao.getAllPredictionTravail();
                     break;
-                case SANTE : predictions = predictionDao.getAllPredictionSante();
+                case SANTE:
+                    predictions = predictionDao.getAllPredictionSante();
                     break;
-                case TOUS : predictions = predictionDao.getllAllPredictions();
+                case TOUS:
+                    predictions = predictionDao.getllAllPredictions();
                     break;
-                default:;
+                default:
+                    ;
             }
         }
         catch (Exception e)
         {
-            System.out.println("Erreur dans le getPrediction "+e.getMessage());
+            System.out.println("Erreur dans le getPrediction " + e.getMessage());
         }
         finally
         {
             JpaUtil.closeEntityManager();
             return predictions;
-        } 
-    }
-    
-    @Deprecated
-    public Employe findEmployeByNum(int num)
-    {
-        Employe employe = null;
-        
-        JpaUtil.openEntityManager();
-        
-        try
-        {
-            employe = employeDao.findEmploye(num);
-        }
-        catch(Exception e)
-        {
-            System.out.println("Erreur dans le findEmployeByNum : "+ e.getMessage());
-        }
-        finally
-        {
-            JpaUtil.closeEntityManager();
-            return employe;
         }
     }
-    
+
+    /**
+     * Permet de récupérer l'ensemble des mediums présent en BD sous la forme
+     * d'une liste
+     * @return la <code> List Medium</code>
+     */
     public List<Medium> getAllMediums()
     {
         List<Medium> mediums = null;
         JpaUtil.openEntityManager();
-        
+
         try
         {
             mediums = mediumDao.findAll();
         }
         catch (Exception e)
         {
-            System.out.println("erreur getAllMediums service : "+e.getMessage());
+            System.out.println("erreur getAllMediums service : " + e.getMessage());
         }
         finally
         {
@@ -415,4 +475,5 @@ public class Service
             return mediums;
         }
     }
+
 }

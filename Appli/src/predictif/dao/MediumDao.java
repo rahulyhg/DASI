@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package predictif.dao;
 
 import java.util.List;
@@ -15,27 +14,29 @@ import predictif.util.JpaUtil;
  *
  * @author Administrateur
  */
-public class MediumDao {
+public class MediumDao
+{
 
     static private MediumDao instance = null;
-    
+
     public static MediumDao getInstance()
     {
         if (instance == null)
         {
             instance = new MediumDao();
         }
-        
+
         return instance;
     }
-    
-    public void create(Medium medium) {
+
+    public void create(Medium medium)
+    {
         JpaUtil.getEntityManager().persist(medium);
     }
 
     public void create(List<Medium> mediums)
     {
-        for(Medium medium : mediums)
+        for (Medium medium : mediums)
         {
             create(medium);
         }
@@ -51,6 +52,9 @@ public class MediumDao {
     {
         JpaUtil.getEntityManager().merge(medium);
     }
-    
-    private MediumDao() {}
+
+    private MediumDao()
+    {
+    }
+
 }

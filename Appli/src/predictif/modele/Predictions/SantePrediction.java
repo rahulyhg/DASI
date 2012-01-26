@@ -19,8 +19,12 @@ public class SantePrediction extends Prediction {
 
     public SantePrediction(int niveau, String contenu) {
         this.niveau = niveau;
-        this.sigle = '#';
         this.contenu = contenu;
+    }
+    
+    static public void setSigle()
+    {
+        sigle = '#';
     }
 
 }

@@ -38,12 +38,14 @@ public class Client
     private GregorianCalendar dateNaissance;
     @ManyToOne
     private SigneAstrologique signeAstrologique;
-    @ManyToOne
+    @ManyToOne(cascade =
+    {
+        CascadeType.MERGE, CascadeType.REFRESH
+    })
     private Employe referent;
     @ManyToMany
     private List<Medium> mediumsFavoris;
-    
-    @OneToMany(cascade= CascadeType.REMOVE, mappedBy="leClient")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "leClient")
     private List<Horoscope> horoscopes;
 
     public Client()
@@ -167,7 +169,7 @@ public class Client
      * @param autreClient
      * @return vrai si la date de naissance a été modifié, faux sinon
      */
-    public boolean naissancemodifie(Client autreClient)
+    public boolean isBirthModified(Client autreClient)
     {
         if (dateNaissance.equals(autreClient.getDateNaissance()))
         {

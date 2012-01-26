@@ -14,10 +14,11 @@ import predictif.util.JpaUtil;
  *
  * @author Administrateur
  */
-public class SigneAstrologiqueDao {
+public class SigneAstrologiqueDao
+{
 
     static private SigneAstrologiqueDao instance = null;
-    
+
     public static SigneAstrologiqueDao getInstance()
     {
         if (instance == null)
@@ -26,13 +27,16 @@ public class SigneAstrologiqueDao {
         }
         return instance;
     }
-    
-    public void create(SigneAstrologique signe) {
+
+    public void create(SigneAstrologique signe)
+    {
         JpaUtil.getEntityManager().persist(signe);
     }
 
-    public void create(List<SigneAstrologique> signes) {
-        for (SigneAstrologique signe : signes) {
+    public void create(List<SigneAstrologique> signes)
+    {
+        for (SigneAstrologique signe : signes)
+        {
             create(signe);
         }
     }
@@ -40,11 +44,14 @@ public class SigneAstrologiqueDao {
     public SigneAstrologique retrieve(GregorianCalendar date)
     {
         Query q = JpaUtil.getEntityManager().createQuery("SELECT s FROM SigneAstrologique s WHERE (:extractedDay >= s.jourDebut AND :extractedMonth = s.moisDebut) OR (:extractedMonth = s.moisFin AND :extractedDay <= s.jourFin)");
-        q.setParameter("extractedDay",date.get(GregorianCalendar.DATE));
+        q.setParameter("extractedDay", date.get(GregorianCalendar.DATE));
         q.setParameter("extractedMonth", date.get(GregorianCalendar.MONTH));
 
         return (SigneAstrologique) q.getSingleResult();
     }
-    
-    private SigneAstrologiqueDao() {}
+
+    private SigneAstrologiqueDao()
+    {
+    }
+
 }

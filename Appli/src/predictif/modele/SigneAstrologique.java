@@ -33,46 +33,4 @@ public class SigneAstrologique {
         this.moisDebut = moisDebut;
         this.moisFin = moisFin;
     }
-
-    public int getJourDebut() {
-        return jourDebut;
-    }
-
-    public void setJourDebut(int jourDebut) {
-        this.jourDebut = jourDebut;
-    }
-
-    public int getJourFin() {
-        return jourFin;
-    }
-
-    public void setJourFin(int jourFin) {
-        this.jourFin = jourFin;
-    }
-
-    public int getMoisDebut() {
-        return moisDebut;
-    }
-
-    public void setMoisDebut(int moisDebut) {
-        this.moisDebut = moisDebut;
-    }
-
-    public int getMoisFin() {
-        return moisFin;
-    }
-
-    public void setMoisFin(int moisFin) {
-        this.moisFin = moisFin;
-    }
-
-
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
 }

@@ -23,30 +23,6 @@ public abstract class Prediction {
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected int id;
     protected int niveau;
-    protected char sigle;
+    static protected char sigle;
     protected String contenu;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getContenu() {
-        return contenu;
-    }
-
-    public void setContenu(String contenu) {
-        this.contenu = contenu;
-    }
-
-    public int getNiveau() {
-        return niveau;
-    }
-
-    public void setNiveau(int niveau) {
-        this.niveau = niveau;
-    }
 }
