@@ -14,8 +14,13 @@ import predictif.dao.MediumDao;
 import predictif.dao.PredictionDao;
 import predictif.dao.SigneAstrologiqueDao;
 import predictif.modele.Client;
+import predictif.modele.Employe;
 import predictif.modele.Horoscope;
+import predictif.modele.Medium;
+import predictif.modele.Predictions.AmourPrediction;
 import predictif.modele.Predictions.Prediction;
+import predictif.modele.Predictions.SantePrediction;
+import predictif.modele.Predictions.TravailPrediction;
 import predictif.modele.SigneAstrologique;
 import predictif.util.JpaUtil;
 
@@ -25,6 +30,60 @@ import predictif.util.JpaUtil;
  */
 public class Service
 {
+
+    public void createClient(String nom, String prenom, String adresse, String email, String tel, GregorianCalendar dateNaissance, List<Medium> mediums)
+    {
+        Employe referent = findMinReferent();
+        
+        Client leClient = new Client(nom, prenom, adresse, email, tel, dateNaissance, calculerSigneAstro(dateNaissance), mediums, referent);
+        EntityTransaction tx = null;
+        
+        JpaUtil.openEntityManager();
+        
+        try
+        {
+            tx = JpaUtil.getEntityManagerTransaction();
+            tx.begin();
+            clientDao.create(leClient);
+            tx.commit();
+            System.out.println("commit createClient ok");
+        }
+        catch (Exception e)
+        {
+            System.out.println("Erreur rencontrée au createClient : " + e.toString());
+            if (tx != null && tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+        }
+    }
+    
+    private Employe findMinReferent()
+    {
+          Employe referent = null;
+        
+        JpaUtil.openEntityManager();
+        
+        try
+        {
+            referent = employeDao.findMinusEmploye();
+            System.out.println("findMinReferent ok");
+        }
+        catch (Exception e)
+        {
+            System.out.println("Erreur rencontrée au findMinReferent : " + e.toString());
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return referent;
+        }      
+    }
+    
     public enum TypePrediction {TRAVAIL, SANTE, AMOUR, TOUS};
     
     protected ClientDao clientDao;
@@ -186,13 +245,13 @@ public class Service
     public void supprimerClient(Client client)
     {
         JpaUtil.openEntityManager();
-        
         EntityTransaction tx = null;
         
         try        
         {
             tx = JpaUtil.getEntityManagerTransaction();
             tx.begin();
+            
             clientDao.deleteClient(client);
             tx.commit();
             System.out.println("Le delete s'est déroulé normalement");
@@ -211,51 +270,10 @@ public class Service
         }        
     }
 
-    /**
-     * Permet de persister un client en BD. Prend en charge l'attribution du client
-     * ainsi que le calcul du signe astrologique
-     * @param client 
-     */
-    public void createClient(Client client)    
+    public void createHoroscope(AmourPrediction amour, TravailPrediction travail, SantePrediction sante, Medium mediumChoisi, Client leClient)
     {
-        //Ceci ne sera pas forcément utile, tout dépendra de l'IHM final.
-        calculerSigneAstro(client);
-        
-        JpaUtil.openEntityManager();
-        EntityTransaction tx = null;
-        
-        try
-        {
-            tx = JpaUtil.getEntityManagerTransaction();
-            tx.begin();
-            clientDao.create(client);
-            tx.commit();
-            System.out.println("commit ok");
-        }
-        catch (Exception e)
-        {
-            System.out.println("Erreur rencontrée au create : " + e.toString());
-            if (tx != null && tx.isActive())
-            {
-                tx.rollback();
-            }
-        }
-        finally
-        {
-            JpaUtil.closeEntityManager();
-        }
-    }
-
-    /**UTILISER A LA PLACE updateClient()
-     * Méthode permettant de créer un horoscope pour un client. Cette méthode
-     * se charge de l'ajout de l'horoscope à la liste possédé par le client.
-     * @param unClient
-     * @param unHoro 
-     */
-    @Deprecated
-    public void createHoro(Client unClient, Horoscope unHoro)
-    {
-        unClient.addHoroscope(unHoro);
+        Horoscope horo = new Horoscope(mediumChoisi, amour, travail, sante, leClient);
+        leClient.addHoroscope(horo);
         JpaUtil.openEntityManager();
         
         EntityTransaction tx = null;
@@ -264,8 +282,8 @@ public class Service
         {
             tx = JpaUtil.getEntityManagerTransaction();
             tx.begin();
-            horoscopeDao.create(unHoro);
-            clientDao.update(unClient);
+          //  horoscopeDao.create(unHoro);
+            clientDao.update(leClient);
             tx.commit();
             System.out.println("commit ok sur ajout horo");
         }
@@ -280,7 +298,7 @@ public class Service
         finally
         {
             JpaUtil.closeEntityManager();
-        }
+        }        
     }
 
     /**
@@ -353,7 +371,48 @@ public class Service
         {
             JpaUtil.closeEntityManager();
             return predictions;
-        }
+        } 
+    }
+    
+    @Deprecated
+    public Employe findEmployeByNum(int num)
+    {
+        Employe employe = null;
         
+        JpaUtil.openEntityManager();
+        
+        try
+        {
+            employe = employeDao.findEmploye(num);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Erreur dans le findEmployeByNum : "+ e.getMessage());
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return employe;
+        }
+    }
+    
+    public List<Medium> getAllMediums()
+    {
+        List<Medium> mediums = null;
+        JpaUtil.openEntityManager();
+        
+        try
+        {
+            mediums = mediumDao.findAll();
+        }
+        catch (Exception e)
+        {
+            System.out.println("erreur getAllMediums service : "+e.getMessage());
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return mediums;
+        }
     }
 }

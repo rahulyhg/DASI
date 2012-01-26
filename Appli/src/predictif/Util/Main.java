@@ -8,8 +8,6 @@ package predictif.Util;
 
 import java.util.GregorianCalendar;
 import java.util.List;
-import predictif.modele.Client;
-import predictif.modele.Horoscope;
 import predictif.modele.Predictions.AmourPrediction;
 import predictif.modele.Predictions.Prediction;
 import predictif.modele.Predictions.SantePrediction;
@@ -29,23 +27,30 @@ public class Main {
     public static void main(String[] args)
     {
         PreparationBD serviceBD = new PreparationBD();
-        Service service = new Service();
         serviceBD.preparerBD();
+        Service service = new Service();
   
         GregorianCalendar calendar = new GregorianCalendar(1991, 10, 21);
-        Client unClient = new Client("fouchet", "pierre", "rue titi", "jean@email", "0665642480", calendar, service.calculerSigneAstro(calendar), null);
-        service.createClient(unClient);
-        List<Prediction> amours = service.getPrediction(Service.TypePrediction.AMOUR);
-        List<Prediction> travaux = service.getPrediction(Service.TypePrediction.TRAVAIL);
-        List<Prediction> santes = service.getPrediction(Service.TypePrediction.SANTE);
-        Horoscope unHoro = new Horoscope (null, (AmourPrediction)amours.get(0),(TravailPrediction) travaux.get(0), (SantePrediction)santes.get(0),unClient);
-        unClient.addHoroscope(unHoro);
-        service.updateClient(unClient);     
+        service.createClient("fouchet", "pierre", "rue titi", "jean@email", "0665642480", calendar,service.getAllMediums());
+        service.createClient("fouchet2", "pierre", "rue titi", "jean@email", "0665642480", calendar,service.getAllMediums());
+        service.createClient("fouchet3", "pierre", "rue titi", "jean@email", "0665642480", calendar,service.getAllMediums());
+        service.createClient("fouchet4", "pierre", "rue titi", "jean@email", "0665642480", calendar,service.getAllMediums());
+        service.createClient("fouchet5", "pierre", "rue titi", "jean@email", "0665642480", calendar,service.getAllMediums());
+        service.createClient("fouchet6", "pierre", "rue titi", "jean@email", "0665642480", calendar,service.getAllMediums());
+       
+        
+        
+        
+//        List<Prediction> amours = service.getPrediction(Service.TypePrediction.AMOUR);
+//        List<Prediction> travaux = service.getPrediction(Service.TypePrediction.TRAVAIL);
+//        List<Prediction> santes = service.getPrediction(Service.TypePrediction.SANTE);
+                
+//        service.createHoroscope((AmourPrediction)amours.get(0),(TravailPrediction) travaux.get(0), (SantePrediction)santes.get(0),unClient.getMediumsFavoris().get(0),unClient);
        
      //   service.verifierEmploye(99, "titi");
      //   service.verifierEmploye(2, "hashedpasswd");
         
-        service.supprimerClient(unClient);
+//        service.supprimerClient(unClient);
     }
 
 }

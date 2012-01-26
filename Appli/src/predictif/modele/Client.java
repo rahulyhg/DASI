@@ -7,6 +7,7 @@ package predictif.modele;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,7 +42,8 @@ public class Client
     private Employe referent;
     @ManyToMany
     private List<Medium> mediumsFavoris;
-    @OneToMany
+    
+    @OneToMany(cascade= CascadeType.REMOVE, mappedBy="leClient")
     private List<Horoscope> horoscopes;
 
     public Client()
@@ -51,16 +53,7 @@ public class Client
 
     public Client(String nom, String prenom, String adressePostale,
             String email, String tel, GregorianCalendar dateNaissance,
-            SigneAstrologique signe, List<Medium> mediums, List<Horoscope> horoscopes)
-    {
-        this(nom, prenom, adressePostale,email, tel, dateNaissance,
-                signe, mediums);
-        this.horoscopes = horoscopes;
-    }
-
-    public Client(String nom, String prenom, String adressePostale,
-            String email, String tel, GregorianCalendar dateNaissance,
-            SigneAstrologique signe, List<Medium> mediums)
+            SigneAstrologique signe, List<Medium> mediums, Employe referent)
     {
         this.nom = nom;
         this.prenom = prenom;
@@ -69,7 +62,9 @@ public class Client
         this.tel = tel;
         this.dateNaissance = dateNaissance;
         this.signeAstrologique = signe;
-        mediumsFavoris = mediums;
+        this.mediumsFavoris = mediums;
+        this.referent = referent;
+        this.horoscopes = new ArrayList<Horoscope>();
     }
 
     public List<Medium> getMediumsFavoris()

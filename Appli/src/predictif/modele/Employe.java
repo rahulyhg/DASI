@@ -6,6 +6,7 @@ package predictif.modele;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,7 +28,7 @@ public class Employe {
 
     private String prenom;
 
-    @OneToMany(mappedBy = "referent")
+    @OneToMany(cascade= CascadeType.ALL, mappedBy = "referent")
     private List<Client> clients;
 
     private String password;

@@ -43,7 +43,7 @@ public class MediumDao {
 
     public List<Medium> findAll()
     {
-        Query q = JpaUtil.getEntityManager().createQuery("SELECT medium FROM medium");
+        Query q = JpaUtil.getEntityManager().createQuery("SELECT m FROM Medium m");
         return q.getResultList();
     }
 

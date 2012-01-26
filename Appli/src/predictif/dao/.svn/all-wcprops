@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/pf.tp-java/!svn/ver/2/src/predictif/dao
+END
+ClientDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pf.tp-java/!svn/ver/2/src/predictif/dao/ClientDao.java
+END
+MediumDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pf.tp-java/!svn/ver/2/src/predictif/dao/MediumDao.java
+END
+PredictionDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/pf.tp-java/!svn/ver/2/src/predictif/dao/PredictionDao.java
+END
+SigneAstrologiqueDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/pf.tp-java/!svn/ver/2/src/predictif/dao/SigneAstrologiqueDao.java
+END
+EmployeDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/pf.tp-java/!svn/ver/2/src/predictif/dao/EmployeDao.java
+END

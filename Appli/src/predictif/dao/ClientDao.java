@@ -8,6 +8,7 @@ package predictif.dao;
 import java.util.List;
 import javax.persistence.Query;
 import predictif.modele.Client;
+import predictif.modele.Horoscope;
 import predictif.util.JpaUtil;
 
 /**
@@ -61,7 +62,7 @@ public class ClientDao {
     
     public void deleteClient(Client client)
     {
-        JpaUtil.getEntityManager().remove(client);
+        JpaUtil.getEntityManager().remove(JpaUtil.getEntityManager().merge(client));
     }
     
     private ClientDao() {}

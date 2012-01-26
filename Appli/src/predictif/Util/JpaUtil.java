@@ -13,14 +13,14 @@ public class JpaUtil {
     private static ThreadLocal<EntityManager> tl = new ThreadLocal<EntityManager>();
 
     public static void openEntityManager() {
-        System.out.println("Création de l'entity manager");
+//        System.out.println("Création de l'entity manager");
         emf = getEntityManagerFactory();
         EntityManager em = emf.createEntityManager();
         tl.set(em);
     }
 
     public static EntityManager getEntityManager() {
-        System.out.println("obtention de l'entity manager");
+//        System.out.println("obtention de l'entity manager");
         EntityManager em = tl.get();
         return em;
     }
@@ -33,7 +33,7 @@ public class JpaUtil {
     }
 
     public static void closeEntityManager() {
-        System.out.println("Fermeture de l'entity manager");
+//        System.out.println("Fermeture de l'entity manager");
         EntityManager em = tl.get();
         if (em != null) {
             em.close();
@@ -42,7 +42,7 @@ public class JpaUtil {
     }
 
     public static EntityTransaction getEntityManagerTransaction() throws Exception {
-        System.out.println("Creation d'une transaction");
+//        System.out.println("Creation d'une transaction");
         return getEntityManager().getTransaction();
     }
 }

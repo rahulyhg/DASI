@@ -51,6 +51,10 @@ public class Horoscope {
         this.leClient = leClient;
     }
 
+    public void setLeClient(Client leClient)
+    {
+        this.leClient = leClient;
+    }
     
 
 }
