@@ -109,6 +109,7 @@ public class MainFrame_edit extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Ajouter un client");
+        jButton1.setEnabled(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -116,6 +117,7 @@ public class MainFrame_edit extends javax.swing.JFrame {
         });
 
         jButton2.setText("Rechercher");
+        jButton2.setEnabled(false);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
