@@ -104,7 +104,6 @@ public class MainFrame_edit extends javax.swing.JFrame {
             }
         ));
         jTable1.setAutoCreateRowSorter(true);
-        jTable1.setEnabled(false);
         jTable1.setShowGrid(false);
         jScrollPane1.setViewportView(jTable1);
 
@@ -115,6 +114,8 @@ public class MainFrame_edit extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+
+        jTextField1.setEnabled(false);
 
         jButton2.setText("Rechercher");
         jButton2.setEnabled(false);
