@@ -1,35 +1,35 @@
 K 25
 svn:wc:ra_dav:version-url
 V 47
-/svn/pf.tp-java/!svn/ver/2/src/predictif/modele
-END
-Medium.java
-K 25
-svn:wc:ra_dav:version-url
-V 59
-/svn/pf.tp-java/!svn/ver/2/src/predictif/modele/Medium.java
+/svn/pf.tp-java/!svn/ver/5/src/predictif/modele
 END
 Horoscope.java
 K 25
 svn:wc:ra_dav:version-url
 V 62
-/svn/pf.tp-java/!svn/ver/2/src/predictif/modele/Horoscope.java
-END
-SigneAstrologique.java
-K 25
-svn:wc:ra_dav:version-url
-V 70
-/svn/pf.tp-java/!svn/ver/2/src/predictif/modele/SigneAstrologique.java
-END
-Employe.java
-K 25
-svn:wc:ra_dav:version-url
-V 60
-/svn/pf.tp-java/!svn/ver/2/src/predictif/modele/Employe.java
+/svn/pf.tp-java/!svn/ver/5/src/predictif/modele/Horoscope.java
 END
 Client.java
 K 25
 svn:wc:ra_dav:version-url
 V 59
-/svn/pf.tp-java/!svn/ver/2/src/predictif/modele/Client.java
+/svn/pf.tp-java/!svn/ver/5/src/predictif/modele/Client.java
+END
+Employe.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/pf.tp-java/!svn/ver/5/src/predictif/modele/Employe.java
+END
+Medium.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/pf.tp-java/!svn/ver/5/src/predictif/modele/Medium.java
+END
+SigneAstrologique.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/pf.tp-java/!svn/ver/5/src/predictif/modele/SigneAstrologique.java
 END

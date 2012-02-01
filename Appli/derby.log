@@ -1,7 +1,11 @@
-2012-01-24 13:40:36.998 GMT : Apache Derby Serveur r?©seau - 10.5.3.0 - (802917) d?©marr?© et pr?™t ?† accepter les connexions sur le port 1527
+2012-02-01 11:35:44.204 GMT : Apache Derby Serveur r?©seau - 10.5.3.0 - (802917) d?©marr?© et pr?™t ?† accepter les connexions sur le port 1527
 ----------------------------------------------------------------
-2012-01-24 13:40:37.624 GMT:
- Amor?ßage de Derby version The Apache Software Foundation - Apache Derby - 10.5.3.0 - (802917) : instance a816c00e-0135-0ff2-5fc0-00000b046ac3
-sur le r?©pertoire de base de donn?©es D:\INSA\TPs\pf.tp-java\DB3326  
+2012-02-01 11:35:48.272 GMT:
+ Amor?ßage de Derby version The Apache Software Foundation - Apache Derby - 10.5.3.0 - (802917) : instance a816c00e-0135-38b2-eb05-ffffad9de007
+sur le r?©pertoire de base de donn?©es D:\INSA\TPs\Git\DASI\Appli\DB3326  
 
 Chargeur de classe de la base de données démarré - derby.database.classpath=''
+
+2012-02-01 12:22:42.362 GMT:
+Arr?™t de l'instance a816c00e-0135-38b2-eb05-ffffad9de007
+----------------------------------------------------------------

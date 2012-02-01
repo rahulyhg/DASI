@@ -55,7 +55,7 @@ public class PrepareBD
         }
         catch (NoSuchAlgorithmException ex)
         {
-            System.out.println("Erreur d'algorithme");
+            System.err.println("Erreur d'algorithme");
         }
     }
 
@@ -93,22 +93,27 @@ public class PrepareBD
         signes.add(new SigneAstrologique("Poisson", 19, 20, 2, 3));
 
         ArrayList<TravailPrediction> travailPredictions = new ArrayList<TravailPrediction>();
-        travailPredictions.add(new TravailPrediction(1, "vide"));
-        travailPredictions.add(new TravailPrediction(5, "vide1"));
-        travailPredictions.add(new TravailPrediction(2, "vide2"));
-        travailPredictions.add(new TravailPrediction(1, "vide3"));
-        travailPredictions.add(new TravailPrediction(2, "vide4"));
-        travailPredictions.add(new TravailPrediction(4, "vide5"));
+        travailPredictions.add(new TravailPrediction(1, "Que vous arrive-t-il aujourd'hui? Vous voyez tout en noir, "
+                + "Le pessimisme vient éteindre ce bon moral des jours derniers"));
+        travailPredictions.add(new TravailPrediction(5, "Les astres dans votre thème aujourd'hui vous apporteront tout leur concours chanceux et "
+                + "vous garantiront des appuis en haut lieu."));
+        travailPredictions.add(new TravailPrediction(3, "L'évolution professionnelle amorcée depuis quelque temps déjà se poursuivra activement et devrait commencer à porter ses fruits."));
+        travailPredictions.add(new TravailPrediction(2, "Si vous travaillez sur de grands projets, soyez patient et persévérant. En effet, difficultés et retards pourraient se multiplier."));
+        travailPredictions.add(new TravailPrediction(3, "ur le plan professionnel, les gros soucis devraient vous être épargnés."));
+        travailPredictions.add(new TravailPrediction(4, "L'ambition vous guidera : ce sera un ressort significatif de votre personnalité. "
+                + "Vous irez au fond des choses"));
 
         ArrayList<SantePrediction> santePredictions = new ArrayList<SantePrediction>();
-        santePredictions.add(new SantePrediction(1, "vide"));
-        santePredictions.add(new SantePrediction(2, "vide2"));
-        santePredictions.add(new SantePrediction(4, "vide3"));
-        santePredictions.add(new SantePrediction(3, "vide4"));
-        santePredictions.add(new SantePrediction(2, "vide5"));
+        santePredictions.add(new SantePrediction(1, "Vous aurez besoin aujourd'hui de beaucoup de vitamine C pour renforcer vos défenses naturelles. "
+                + "Prenez au petit-déjeuner un verre de jus de cassis"));
+        santePredictions.add(new SantePrediction(2, "Pas de problème de santé particulier en ce moment, les planètes régissant la vitalité étant toutes bien aspectées"));
+        santePredictions.add(new SantePrediction(4, "Quelle santé ! Ce n'est sans doute pas en ce moment que vous rendrez visite à un médecin !"));
+        santePredictions.add(new SantePrediction(3, "Votre bonne santé sera conditionnée par un bon équilibre de vos fonctions digestives mais également par une hygiène de vie très stricte"));
+        santePredictions.add(new SantePrediction(2, "Vous aurez raison d'observer la plus stricte prudence en ce qui concerne les maladies sexuellement transmissibles. "
+                + "Sachez que les accidents en ce domaine ne sont nullement une punition infligée par un hypothétique Dieu de la vengeance(trouvé sur un site!)"));
 
         List<AmourPrediction> amourPredictions = new ArrayList<AmourPrediction>();
-        amourPredictions.add(new AmourPrediction(2, "Pas de chance en amour"));
+        amourPredictions.add(new AmourPrediction(1, "Pas de chance en amour"));
         amourPredictions.add(new AmourPrediction(4, "En ce qui concerne votre vie sentimentale actuelle ou à venir, votre charme sera sûr d'opérer."));
         amourPredictions.add(new AmourPrediction(3, "L'amour arrive souvent là ou on s'y attend le moins, et vous en aurez un bel exemple aujourd'hui."));
         amourPredictions.add(new AmourPrediction(3, "Du nouveau au niveau de votre vie amoureuse qui se portera bien mieux que ces derniers jours."));
@@ -139,7 +144,7 @@ public class PrepareBD
         }
         catch (Exception e)
         {
-            System.out.println("Erreur rencontrée à preparerBD : " + e.toString());
+            System.err.println("Erreur rencontrée à preparerBD : " + e.toString());
             if (tx != null && tx.isActive())
             {
                 tx.rollback();
@@ -181,7 +186,7 @@ public class PrepareBD
         }
         catch (Exception e)
         {
-            System.out.println("erreur getAllEmployes service : "+e.getMessage());
+            System.err.println("erreur getAllEmployes service : "+e.getMessage());
         }
         finally
         {

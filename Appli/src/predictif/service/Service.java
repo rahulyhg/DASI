@@ -5,6 +5,7 @@
 package predictif.service;
 
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.EntityTransaction;
@@ -35,16 +36,16 @@ public class Service
 
     public enum PredictionType
     {
+
         TRAVAIL, SANTE, AMOUR, TOUS
     };
-    
     protected ClientDao clientDao;
     protected HoroscopeDao horoscopeDao;
     protected SigneAstrologiqueDao signeDao;
     protected EmployeDao employeDao;
     protected MediumDao mediumDao;
     protected PredictionDao predictionDao;
-    
+
     public Service()
     {
         clientDao = ClientDao.getInstance();
@@ -65,12 +66,13 @@ public class Service
      * @param email
      * @param tel
      * @param dateNaissance
-     * @param mediums 
+     * @param mediums la liste des mediums favoris sous forme d'une <code>List</code>
+     * de<code> Medium </code>
      */
     public boolean createClient(String nom, String prenom, String adresse, String email, String tel, GregorianCalendar dateNaissance, List<Medium> mediums)
     {
         boolean status = false;
-        
+
         Employe referent = findMinReferent();
 
         Client leClient = new Client(nom, prenom, adresse, email, tel, dateNaissance, calculateSigne(dateNaissance), mediums, referent);
@@ -103,7 +105,8 @@ public class Service
     }
 
     /**
-     * Permet de créer un nouveau client en BD à partir des paramètres passés.
+     * Permet de créer un nouveau client en BD à partir des paramètres passés. Ne devrait pas
+     * être utilisé dans l'application finale mais juste pour remplir la BD.
      * @param nom
      * @param prenom
      * @param adresse
@@ -174,7 +177,7 @@ public class Service
         }
         catch (Exception e)
         {
-//            System.out.println("Erreur rencontrée au create : " + e.toString());
+            System.err.println("Erreur rencontrée à updateClient : " + e.toString());
             if (tx != null && tx.isActive())
             {
                 tx.rollback();
@@ -209,7 +212,7 @@ public class Service
         }
         catch (Exception e)
         {
-            System.out.println("Erreur rencontrée au delete : " + e.toString());
+            System.err.println("Erreur rencontrée au deleteClient : " + e.toString());
             if (tx != null && tx.isActive())
             {
                 tx.rollback();
@@ -235,11 +238,10 @@ public class Service
         try
         {
             referent = employeDao.findMinusEmploye();
-            System.out.println("findMinReferent ok");
         }
         catch (Exception e)
         {
-            System.out.println("Erreur rencontrée au findMinReferent : " + e.toString());
+            System.err.println("Erreur rencontrée au findMinReferent : " + e.toString());
         }
         finally
         {
@@ -267,7 +269,7 @@ public class Service
         }
         catch (Exception e)
         {
-            System.out.println("Erreur rencontrée au create : " + e.toString());
+            System.err.println("Erreur rencontrée au calculateSigne : " + e.toString());
         }
         finally
         {
@@ -295,7 +297,7 @@ public class Service
         }
         catch (Exception e)
         {
-            System.out.println("Erreur getAllClients:" + e.getMessage());
+            System.err.println("Erreur getAllClients:" + e.getMessage());
         }
         finally
         {
@@ -317,11 +319,10 @@ public class Service
         try
         {
             client = clientDao.retrieveClient(num);
-            System.out.println("retrieve client ok");
         }
         catch (Exception e)
         {
-            System.out.println("Erreur rencontrée au retrieve : " + e.toString());
+            System.err.println("Erreur rencontrée au retrieveClient : " + e.toString());
         }
         finally
         {
@@ -330,8 +331,9 @@ public class Service
         }
     }
 
-    public void createHoroscope(AmourPrediction amour, TravailPrediction travail, SantePrediction sante, Medium mediumChoisi, Client leClient)
+    public boolean createHoroscope(AmourPrediction amour, TravailPrediction travail, SantePrediction sante, Medium mediumChoisi, Client leClient)
     {
+        boolean status = false;
         Horoscope horo = new Horoscope(mediumChoisi, amour, travail, sante, leClient);
         leClient.addHoroscope(horo);
         JpaUtil.openEntityManager();
@@ -342,14 +344,13 @@ public class Service
         {
             tx = JpaUtil.getEntityManagerTransaction();
             tx.begin();
-            //  horoscopeDao.create(unHoro);
             clientDao.update(leClient);
             tx.commit();
-            System.out.println("commit ok sur ajout horo");
+            status = true;
         }
         catch (Exception e)
         {
-            System.out.println("Erreur rencontrée au create : " + e.toString());
+            System.err.println("Erreur rencontrée au createHoroscope : " + e.toString());
             if (tx != null && tx.isActive())
             {
                 tx.rollback();
@@ -358,6 +359,7 @@ public class Service
         finally
         {
             JpaUtil.closeEntityManager();
+            return status;
         }
     }
 
@@ -388,12 +390,11 @@ public class Service
         }
         catch (NoResultException e)
         {
-//            System.out.println("Erreur connexion, employe/mdp inexistant : " + e.getMessage());
-
+//            System.err.println("Erreur connexion, employe/mdp inexistant : " + e.getMessage());
         }
         catch (Exception e)
         {
-            System.out.println("Erreur technique : " + e.getMessage());
+            System.err.println("Erreur technique au connectEmploye : " + e.getMessage());
         }
         finally
         {
@@ -442,7 +443,7 @@ public class Service
         }
         catch (Exception e)
         {
-            System.out.println("Erreur dans le getPrediction " + e.getMessage());
+            System.err.println("Erreur dans le getPrediction " + e.getMessage());
         }
         finally
         {
@@ -467,12 +468,70 @@ public class Service
         }
         catch (Exception e)
         {
-            System.out.println("erreur getAllMediums service : " + e.getMessage());
+            System.err.println("erreur getAllMediums service : " + e.getMessage());
         }
         finally
         {
             JpaUtil.closeEntityManager();
             return mediums;
+        }
+    }
+    
+    /**
+     * Permet de récuperer un horoscope selon son identifiant. Le formatage de son
+     * état interne peut être facilement obtenu en utilisant la méthode toString()
+     * de cet objet.
+     * @param num son identifiant unique
+     * @return l'horoscope en question ou null si l'identifiant n'existe pas
+     */
+    public Horoscope getHoroscope(int num)
+    {
+        Horoscope horo = null;
+        
+        JpaUtil.openEntityManager();
+        
+        try
+        {
+            horo = horoscopeDao.getHoroscope(num);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Erreur dans getDetailsHoroscope(int) : "+e.getMessage());
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return horo;
+        }
+        
+    }
+    
+    /**
+     * Permet de récuperer une <code>List</code> d'<code>Horoscope</code> selon la
+     * date d'insertion dans la base de données (l'insertion se faisant juste après 
+     * sa création).
+     * @param dateInsertion la date pour laquelle on souhaite les horoscopes
+     * @return une <code>List</code> contenant les entités ou vide si aucun horoscope
+     * n'existe pour la date demandée
+     */
+    public List<Horoscope> getHoroscope(GregorianCalendar dateInsertion)
+    {
+        List<Horoscope> horos = new ArrayList<Horoscope>();
+        
+        JpaUtil.openEntityManager();
+        
+        try
+        {
+            horos = horoscopeDao.getHoroscopes(dateInsertion);
+        }
+        catch(Exception e)
+        {
+            System.err.println("Erreur dans getDetailsHoroscope(Calendar) : "+e.getMessage());            
+        }
+        finally
+        {
+            JpaUtil.closeEntityManager();
+            return horos;
         }
     }
 

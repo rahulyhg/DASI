@@ -1,11 +1,23 @@
 K 25
 svn:wc:ra_dav:version-url
 V 45
-/svn/pf.tp-java/!svn/ver/2/src/predictif/Util
+/svn/pf.tp-java/!svn/ver/5/src/predictif/Util
 END
 JpaUtil.java
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/svn/pf.tp-java/!svn/ver/2/src/predictif/Util/JpaUtil.java
+/svn/pf.tp-java/!svn/ver/4/src/predictif/Util/JpaUtil.java
+END
+Main.java
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/pf.tp-java/!svn/ver/5/src/predictif/Util/Main.java
+END
+Saisie.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/pf.tp-java/!svn/ver/5/src/predictif/Util/Saisie.java
 END

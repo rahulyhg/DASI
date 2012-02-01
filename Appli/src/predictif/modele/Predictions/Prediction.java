@@ -25,4 +25,24 @@ public abstract class Prediction {
     protected int niveau;
     static protected char sigle;
     protected String contenu;
+    
+    public String getContenu()
+    {
+        return contenu;
+    }
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append(this.contenu);
+        buffer.append('(');
+        for(int i = 0;i<niveau; i++)
+        {
+             buffer.append(sigle);
+        }
+        buffer.append(')');
+        
+        return buffer.toString();
+    }
 }

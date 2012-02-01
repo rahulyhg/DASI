@@ -4,11 +4,14 @@
  */
 package predictif.modele;
 
+import java.util.GregorianCalendar;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import predictif.modele.Predictions.AmourPrediction;
 import predictif.modele.Predictions.SantePrediction;
 import predictif.modele.Predictions.TravailPrediction;
@@ -34,6 +37,9 @@ public class Horoscope
     private SantePrediction sante;
     @ManyToOne
     private Client leClient;
+    
+    @Temporal(TemporalType.DATE)
+    private GregorianCalendar dateInsertion;
 
     public Horoscope()
     {
@@ -46,6 +52,7 @@ public class Horoscope
         this.travail = travail;
         this.sante = sante;
         this.leClient = leClient;
+        dateInsertion = new GregorianCalendar();
     }
 
     public AmourPrediction getAmour()
@@ -78,5 +85,22 @@ public class Horoscope
         return travail;
     }
     
-    
+    @Override
+    public String toString()
+    {
+        StringBuilder contenu = new StringBuilder();
+        contenu.append(leClient.toString());
+        contenu.append("\nCher ");
+        contenu.append(leClient.getNom());
+        contenu.append(" , votre voyance vous est offerte par : ");
+        contenu.append(medium.getNom());
+        contenu.append("\nTravail : ");
+        contenu.append(travail.toString());
+        contenu.append("\nSanté : ");
+        contenu.append(sante.toString());
+        contenu.append("\nAmour : ");
+        contenu.append(amour.toString());
+        
+        return contenu.toString();
+    }
 }

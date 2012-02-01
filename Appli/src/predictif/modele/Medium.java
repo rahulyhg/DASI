@@ -37,5 +37,10 @@ public class Medium
         this.nom = nom;
         clients = new ArrayList<Client>();
     }
+    
+    public String getNom()
+    {
+        return nom;
+    }
 
 }

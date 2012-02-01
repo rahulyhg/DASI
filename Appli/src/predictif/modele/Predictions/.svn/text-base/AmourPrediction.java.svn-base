@@ -4,15 +4,25 @@
  */
 package predictif.modele.Predictions;
 
+import javax.persistence.Entity;
+
 /**
  *
  * @author Administrateur
  */
+@Entity
 public class AmourPrediction extends Prediction {
 
-    public AmourPrediction(int niveau, char sigle, String contenu) {
+    public AmourPrediction() {
+    }
+
+    public AmourPrediction(int niveau,String contenu) {
         this.niveau = niveau;
-        this.sigle = sigle;
         this.contenu = contenu;
+    }
+    
+    static public void setSigle()
+    {
+        sigle = '+';
     }
 }

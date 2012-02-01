@@ -6,6 +6,7 @@ package predictif.modele;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -69,6 +70,40 @@ public class Client
         this.horoscopes = new ArrayList<Horoscope>();
     }
 
+    @Override
+    public String toString()
+    {
+        StringBuilder contenu = new StringBuilder();
+        contenu.append(nom);
+        contenu.append(" ");
+        contenu.append(prenom);
+        contenu.append("\n");
+        contenu.append(adressePostale);
+        contenu.append("\n");
+        contenu.append("Votre numéro de client : ");
+        contenu.append(numClient);
+        contenu.append("\n");
+        contenu.append("Votre signe astrologique : ");
+        contenu.append(signeAstrologique.getNom());
+        contenu.append("\n");
+        contenu.append("Vos Mediums favoris : ");
+     
+        Iterator<Medium> it = mediumsFavoris.iterator();
+        
+        Medium medium = null;
+        while(it.hasNext())
+        {
+            medium = it.next();
+            contenu.append(medium.getNom());
+            if(it.hasNext())
+            {
+                contenu.append(", ");   
+            }
+        }
+        
+        return contenu.toString();
+    }
+    
     public List<Medium> getMediumsFavoris()
     {
         return mediumsFavoris;

@@ -17,7 +17,8 @@ import javax.persistence.OneToMany;
  * @author Administrateur
  */
 @Entity
-public class Employe {
+public class Employe
+{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,46 +27,64 @@ public class Employe {
     private String prenom;
     @OneToMany(mappedBy = "referent")
     private List<Client> clients;
+    private byte[] password;
 
-    public List<Client> getClients() {
+    public List<Client> getClients()
+    {
         return clients;
     }
 
-    public void setClients(List<Client> clients) {
+    public void setClients(List<Client> clients)
+    {
         this.clients = clients;
     }
 
-    public int getCodeEmploye() {
+    public int getCodeEmploye()
+    {
         return codeEmploye;
     }
 
-    public String getNom() {
+    public String getNom()
+    {
         return nom;
     }
 
-    public void setNom(String nom) {
+    public void setNom(String nom)
+    {
         this.nom = nom;
     }
 
-    public String getPrenom() {
+    public String getPrenom()
+    {
         return prenom;
     }
 
-    public void setPrenom(String prenom) {
+    public void setPrenom(String prenom)
+    {
         this.prenom = prenom;
     }
 
-    public Employe(String nom, String prenom, List<Client> clients) {
+    public void addClient(Client leClient)
+    {
+        clients.add(leClient);
+    }
+
+    public byte[] getPassword()
+    {
+        return password;
+    }
+
+    public Employe(String nom, String prenom, byte[] password)
+    {
         this.nom = nom;
         this.prenom = prenom;
-        this.clients = clients;
+        this.password = password;
+        this.clients = new ArrayList<Client>();
     }
 
-    public Employe(String nom, String prenom) {
-        this(nom, prenom, new ArrayList<Client>());
-    }
-
-    public Employe() {
+    public Employe()
+    {
         clients = new ArrayList<Client>();
     }
+
 }

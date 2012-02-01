@@ -33,4 +33,9 @@ public class SigneAstrologique {
         this.moisDebut = moisDebut;
         this.moisFin = moisFin;
     }
+    
+    public String getNom()
+    {
+        return nom;
+    }
 }
