@@ -21,7 +21,7 @@ import predictif.modele.Predictions.AmourPrediction;
 import predictif.modele.Predictions.SantePrediction;
 import predictif.modele.Predictions.TravailPrediction;
 import predictif.modele.SigneAstrologique;
-import predictif.util.JpaUtil;
+import predictif.Util.JpaUtil;
 
 /**
  *

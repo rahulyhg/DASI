@@ -3,7 +3,6 @@
  * and open the template in the editor.
  */
 
-
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -15,7 +14,7 @@ import predictif.modele.Predictions.SantePrediction;
 import predictif.modele.Predictions.TravailPrediction;
 import predictif.service.PrepareBD;
 import predictif.service.Service;
-import predictif.util.Saisie;
+import predictif.Util.Saisie;
 
 /**
  *
@@ -36,7 +35,6 @@ public class Main
         Service service = new Service();
 
         // Test création de clients avec référent minimum
-        
         // Préparation de la date
         GregorianCalendar calendar = new GregorianCalendar(1991, 10, 21);
         
@@ -73,6 +71,7 @@ public class Main
             System.out.println("Création Ok");
         }
         
+        
         // Test de la fonctionnalité modification de clients
         Client client = service.retrieveClient(28);
         client.setNom("J'ai été modifié");
@@ -100,6 +99,7 @@ public class Main
             System.out.println("Connexion ko");
         }
         
+        
         // Test des horoscopes
         // Récupération de tous les horoscopes
         List<Prediction> amours = service.getPrediction(Service.PredictionType.AMOUR);
@@ -116,6 +116,7 @@ public class Main
         service.createHoroscope((AmourPrediction) amours.get(0), (TravailPrediction) travaux.get(0), (SantePrediction) santes.get(0), client.getMediumsFavoris().get(0), client);
         
         System.out.println(client.getHoroscope().get(0).toString());
+        
         
         // Test suppression client
         service.deleteClient(service.retrieveClient(29));

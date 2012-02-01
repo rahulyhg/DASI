@@ -1,4 +1,4 @@
-package predictif.util;
+package predictif.Util;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
