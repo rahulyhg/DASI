@@ -7,7 +7,7 @@ package predictif.dao;
 import java.util.List;
 import javax.persistence.Query;
 import predictif.modele.Predictions.Prediction;
-import predictif.util.JpaUtil;
+import predictif.Util.JpaUtil;
 
 /**
  *

@@ -8,7 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.Query;
 import predictif.modele.SigneAstrologique;
-import predictif.util.JpaUtil;
+import predictif.Util.JpaUtil;
 
 /**
  *
