@@ -46,35 +46,69 @@ public class Main
         // malheureusement en Java, on ne peut pas faire un switch sur un String
         if (args[0] == "creer-client")
         {
-            // Test création de clients avec référent minimum
-            // Préparation de la date
-            GregorianCalendar calendar = new GregorianCalendar(1991, 10, 21);
-
-            // Préparation des listes de médiums
-            List<Medium> mediums = service.getAllMediums();
-   
-            /*List<Medium> listeMediums1 = new ArrayList<Medium>();
-            listeMediums1.add(mediums.get(0));
-            listeMediums1.add(mediums.get(1));
-
-            List<Medium> listeMediums2 = new ArrayList<Medium>();
-            listeMediums1.add(mediums.get(2));
-            listeMediums1.add(mediums.get(3));*/
-
-            // Création des clients
-            String nom = Saisie.lireChaine("Entrez le nom du client : "); 
-            String prenom = Saisie.lireChaine("Entrez le prenom du client : "); 
-            String adresse = Saisie.lireChaine("Entrez l'adresse : "); 
-            String email = Saisie.lireChaine("Entrez l'adresse email : "); 
+            // On demande les champs "normaux"
+            String nom = Saisie.lireChaine("Entrez le nom du client : ");
+            String prenom = Saisie.lireChaine("Entrez le prenom du client : ");
+            String adresse = Saisie.lireChaine("Entrez l'adresse : ");
+            String email = Saisie.lireChaine("Entrez l'adresse email : ");
             String tel = Saisie.lireChaine("Entrez le numéro de téléphone : ");
-
-            if (service.createClient(nom, prenom, adresse, email, tel, calendar, mediums))
+            
+            // La date de naissance demande plusieur étapes
+            String dateNaissance = Saisie.lireChaine("Entrez la date de naissance du client (format DD/MM/YYYY) : ");
+            String date[] = dateNaissance.split("/");     
+            
+            if (date.length != 3)
+            {
+                System.out.println("Erreur, date de naissance invalide");
+                return;
+            }            
+            
+            GregorianCalendar calendar = new GregorianCalendar(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
+            
+            // Dernière étape : les médiums
+            List<Medium> mediums = service.getAllMediums();
+            
+            for (int i=0;i<mediums.size();i++)
+            {
+                System.out.println("Medium n° " + i + " - " + mediums.get(i).getNom());               
+            }
+            String mediumsStr = Saisie.lireChaine("Entrez les numéros des médiums favoris du client (séparés par des espaces) : ");
+            String mediumsTab[] = mediumsStr.split(" ");
+            
+            List<Medium> mediumsFavoris = new ArrayList<Medium>();
+            
+            for (int i=0;i<mediumsTab.length;i++)
+            {
+                mediumsFavoris.add(mediums.get(Integer.parseInt(mediumsTab[i]))); // un peu long, récupère le médium dont on a le numéro
+            }
+            
+            if (service.createClient(nom, prenom, adresse, email, tel, calendar, mediumsFavoris))
             {
                 System.out.println("Création du client Ok");
             }
+        } else if (args[0] == "modifier-client") {
+            // On liste les clients
+            List<Client> clients = service.getAllClients();
+            
+            // Les affiche
+            for (int i=0;i<clients.size();i++)
+            {
+                System.out.println("Client n° " + clients.get(i).getNumClient() + " - " + clients.get(i).getPrenom() + " " + clients.get(i).getNom());
+            }
+            
+            // On demande lequel on souhaite modifier
+            String numStr = Saisie.lireChaine("Entrez le numéro du client à modifier : ");
+            int num = Integer.parseInt(numStr);
+        
         }
 
+        /*List<Medium> listeMediums1 = new ArrayList<Medium>();
+        listeMediums1.add(mediums.get(0));
+        listeMediums1.add(mediums.get(1));
 
+        List<Medium> listeMediums2 = new ArrayList<Medium>();
+        listeMediums1.add(mediums.get(2));
+        listeMediums1.add(mediums.get(3));*/
 
         /*if (service.createClient("Petit", "Benoit", "avenue Gaillard", "jean@titi.com", "9876543210", calendar, listeMediums1))
         {
