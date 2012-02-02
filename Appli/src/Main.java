@@ -44,7 +44,7 @@ public class Main
         
         // Maintenant on va chercher à comprendre les arguments passés
         // malheureusement en Java, on ne peut pas faire un switch sur un String
-        if (args[0] == "creer-client")
+        if (args[0].equals("creer-client") == true)
         {
             // On demande les champs "normaux"
             String nom = Saisie.lireChaine("Entrez le nom du client : ");
@@ -86,7 +86,9 @@ public class Main
             {
                 System.out.println("Création du client Ok");
             }
-        } else if (args[0] == "modifier-client") {
+        }
+        else if (args[0].equals("modifier-client") == true)
+        {
             // On liste les clients
             List<Client> clients = service.getAllClients();
             
@@ -98,8 +100,69 @@ public class Main
             
             // On demande lequel on souhaite modifier
             String numStr = Saisie.lireChaine("Entrez le numéro du client à modifier : ");
-            int num = Integer.parseInt(numStr);
+            Client client = service.retrieveClient(Integer.parseInt(numStr));
+            
+            System.out.println("Nous allons vous demander les nouvelles valeurs. Pour ne pas modifier la valeur, faites entrer.");
         
+            // On demande les champs "normaux"
+            String nom = Saisie.lireChaine("Entrez le nouveau nom du client : ");
+            if (nom.equals("") == false)
+            {
+                client.setNom(nom);
+            }
+            
+            String prenom = Saisie.lireChaine("Entrez le nouveau prenom du client : ");
+            if (prenom.equals("") == false)
+            {
+                client.setPrenom(prenom);
+            }
+            
+            String adresse = Saisie.lireChaine("Entrez la nouvelle adresse : ");
+            if (adresse.equals("") == false)
+            {
+                client.setAdressePostale(adresse);
+            }
+            
+            String email = Saisie.lireChaine("Entrez le nouvel email : ");
+            if (email.equals("") == false)
+            {
+                client.setEmail(email);
+            }
+            
+            String tel = Saisie.lireChaine("Entrez le nouveau numéro de téléphone : ");
+            if (tel.equals("") == false)
+            {
+                client.setTel(tel);
+            }
+            
+            // La date de naissance demande plusieur étapes
+            /*String dateNaissance = Saisie.lireChaine("Entrez la nouvelle date de naissance du client (format DD/MM/YYYY) : ");
+            String date[] = dateNaissance.split("/");     
+            
+            if (date.length != 3)
+            {
+                System.out.println("Erreur, date de naissance invalide");
+                return;
+            }            
+            
+            GregorianCalendar calendar = new GregorianCalendar(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
+            */
+            // Dernière étape : les médiums
+            /*List<Medium> mediums = service.getAllMediums();
+            
+            for (int i=0;i<mediums.size();i++)
+            {
+                System.out.println("Medium n° " + i + " - " + mediums.get(i).getNom());               
+            }
+            String mediumsStr = Saisie.lireChaine("Entrez les numéros des médiums favoris du client (séparés par des espaces) : ");
+            String mediumsTab[] = mediumsStr.split(" ");
+            
+            List<Medium> mediumsFavoris = new ArrayList<Medium>();
+            
+            for (int i=0;i<mediumsTab.length;i++)
+            {
+                mediumsFavoris.add(mediums.get(Integer.parseInt(mediumsTab[i]))); // un peu long, récupère le médium dont on a le numéro
+            }*/
         }
 
         /*List<Medium> listeMediums1 = new ArrayList<Medium>();
@@ -119,11 +182,6 @@ public class Main
         {
             System.out.println("Création Ok");
         }*/
-        
-        
-        // Test de la fonctionnalité modification de clients
-        Client client = service.retrieveClient(28);
-        client.setNom("J'ai été modifié");
         
         if (service.updateClient(client))
         {
