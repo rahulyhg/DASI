@@ -28,40 +28,55 @@ public class Main
      */
     public static void main(String[] args)
     {
+        // Petite protection : si on ne sait pas quoi faire, affiche le message d'help
+        if (args.length == 0)
+        {
+            System.out.println("Erreur, argument absent. Tapez 'help' pour l'aide.");
+            
+            System.exit(-1); // arrête le programme
+        }
+        
         // Ces 2 lignes permettent de préparer la BD en "dur"
         PrepareBD serviceBD = new PrepareBD();
         serviceBD.populate();        
         
         Service service = new Service();
-
-        // Test création de clients avec référent minimum
-        // Préparation de la date
-        GregorianCalendar calendar = new GregorianCalendar(1991, 10, 21);
         
-        // Préparation des listes de médiums
-        List<Medium> mediums = service.getAllMediums();
-        
-        List<Medium> listeMediums1 = new ArrayList<Medium>();
-        listeMediums1.add(mediums.get(0));
-        listeMediums1.add(mediums.get(1));
-      
-        List<Medium> listeMediums2 = new ArrayList<Medium>();
-        listeMediums1.add(mediums.get(2));
-        listeMediums1.add(mediums.get(3));
-
-        // Création des clients
-        String nom = Saisie.lireChaine("Entrez le nom du client : "); 
-        String prenom = Saisie.lireChaine("Entrez le prenom du client : "); 
-        String adresse = Saisie.lireChaine("Entrez l'adresse : "); 
-        String email = Saisie.lireChaine("Entrez l'adresse email : "); 
-        String tel = Saisie.lireChaine("Entrez le numéro de téléphone : ");
-        
-        if (service.createClient(nom, prenom, adresse, email, tel, calendar, mediums))
+        // Maintenant on va chercher à comprendre les arguments passés
+        // malheureusement en Java, on ne peut pas faire un switch sur un String
+        if (args[0] == "creer-client")
         {
-            System.out.println("Création Ok");
+            // Test création de clients avec référent minimum
+            // Préparation de la date
+            GregorianCalendar calendar = new GregorianCalendar(1991, 10, 21);
+
+            // Préparation des listes de médiums
+            List<Medium> mediums = service.getAllMediums();
+   
+            /*List<Medium> listeMediums1 = new ArrayList<Medium>();
+            listeMediums1.add(mediums.get(0));
+            listeMediums1.add(mediums.get(1));
+
+            List<Medium> listeMediums2 = new ArrayList<Medium>();
+            listeMediums1.add(mediums.get(2));
+            listeMediums1.add(mediums.get(3));*/
+
+            // Création des clients
+            String nom = Saisie.lireChaine("Entrez le nom du client : "); 
+            String prenom = Saisie.lireChaine("Entrez le prenom du client : "); 
+            String adresse = Saisie.lireChaine("Entrez l'adresse : "); 
+            String email = Saisie.lireChaine("Entrez l'adresse email : "); 
+            String tel = Saisie.lireChaine("Entrez le numéro de téléphone : ");
+
+            if (service.createClient(nom, prenom, adresse, email, tel, calendar, mediums))
+            {
+                System.out.println("Création du client Ok");
+            }
         }
 
-        if (service.createClient("Petit", "Benoit", "avenue Gaillard", "jean@titi.com", "9876543210", calendar, listeMediums1))
+
+
+        /*if (service.createClient("Petit", "Benoit", "avenue Gaillard", "jean@titi.com", "9876543210", calendar, listeMediums1))
         {
             System.out.println("Création Ok");
         }
@@ -69,7 +84,7 @@ public class Main
         if (service.createClient("Petit2", "Benoit2", "avenue Gaillard2", "jean2@titi.com", "7777543210", calendar, listeMediums2))
         {
             System.out.println("Création Ok");
-        }
+        }*/
         
         
         // Test de la fonctionnalité modification de clients
@@ -120,6 +135,15 @@ public class Main
         
         // Test suppression client
         service.deleteClient(service.retrieveClient(29));
+    }
+    
+    /*
+     * Private (à priori non accessible directement)
+     * Pour créer un client en mode interactif
+     */
+    private  void createClient()
+    {
+
     }
 
 }
