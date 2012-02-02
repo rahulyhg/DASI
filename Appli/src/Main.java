@@ -31,7 +31,7 @@ public class Main
         // Petite protection : si on ne sait pas quoi faire, affiche le message d'help
         if (args.length == 0)
         {
-            System.out.println("Erreur, argument absent. Tapez 'help' pour l'aide.");
+            System.out.println("Erreur, commande absente. Tapez 'aide' pour l'aide.");
             
             System.exit(-1); // arrête le programme
         }
@@ -135,34 +135,54 @@ public class Main
                 client.setTel(tel);
             }
             
-            // La date de naissance demande plusieur étapes
-            /*String dateNaissance = Saisie.lireChaine("Entrez la nouvelle date de naissance du client (format DD/MM/YYYY) : ");
-            String date[] = dateNaissance.split("/");     
-            
-            if (date.length != 3)
+            // Mise à jour
+            if (service.updateClient(client))
             {
-                System.out.println("Erreur, date de naissance invalide");
-                return;
-            }            
-            
-            GregorianCalendar calendar = new GregorianCalendar(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
-            */
-            // Dernière étape : les médiums
-            /*List<Medium> mediums = service.getAllMediums();
-            
-            for (int i=0;i<mediums.size();i++)
-            {
-                System.out.println("Medium n° " + i + " - " + mediums.get(i).getNom());               
+                System.out.println(client.getNom() + " mis à jour");
             }
-            String mediumsStr = Saisie.lireChaine("Entrez les numéros des médiums favoris du client (séparés par des espaces) : ");
-            String mediumsTab[] = mediumsStr.split(" ");
-            
-            List<Medium> mediumsFavoris = new ArrayList<Medium>();
-            
-            for (int i=0;i<mediumsTab.length;i++)
+            else
             {
-                mediumsFavoris.add(mediums.get(Integer.parseInt(mediumsTab[i]))); // un peu long, récupère le médium dont on a le numéro
-            }*/
+                System.out.println("Mise à jour de " + client.getNom() + " râtée");
+            }
+        }
+        else if (args[0].equals("supprimer-client") == true)
+        {
+            // On liste les clients
+            List<Client> clients = service.getAllClients();
+            
+            // Les affiche
+            for (int i=0;i<clients.size();i++)
+            {
+                System.out.println("Client n° " + clients.get(i).getNumClient() + " - " + clients.get(i).getPrenom() + " " + clients.get(i).getNom());
+            }
+            
+            // On demande lequel on souhaite modifier
+            String numStr = Saisie.lireChaine("Entrez le numéro du client à supprimer : ");
+            Client client = service.retrieveClient(Integer.parseInt(numStr));
+            
+            String confirm = Saisie.lireChaine("Êtes-vous certain de vouloir supprimer le client " + client.getPrenom() + " " + client.getNom() + " ? o/n");
+            
+            if (confirm.equals("o") == true)
+            {
+                service.deleteClient(client);
+                System.out.println("Client supprimé");
+            }
+            else
+            {
+               System.out.println("Modification annulée"); 
+            }
+        }
+        else if (args[0].equals("aide") == true)
+        {
+            System.out.println("Bienvenue dans l'aide.");
+            System.out.println("Les commandes suivantes sont disponibles (en mode interactif) :");
+            System.out.println("'creer-client' pour ajouter un nouveau client");
+            System.out.println("'modifier-client' pour afficher la liste des clients et en modifier un");
+            System.out.println("'supprimer-client' pour afficher la liste des clients et en supprimer un");
+        }
+        else
+        {
+            System.out.println("Erreur, commande non reconnue. Tapez 'aide' pour l'aide.");
         }
 
         /*List<Medium> listeMediums1 = new ArrayList<Medium>();
@@ -183,15 +203,9 @@ public class Main
             System.out.println("Création Ok");
         }*/
         
-        if (service.updateClient(client))
-        {
-            System.out.println(client.getNom() + " mis à jour");
-        }
-        else
-        {
-            System.out.println("Mise à jour de " + client.getNom());
-        }
-        
+
+        // TODO
+        /*
         
         // Test de la connexion des employés
         service.connectEmploye(99, "titi");
@@ -223,19 +237,6 @@ public class Main
         service.createHoroscope((AmourPrediction) amours.get(0), (TravailPrediction) travaux.get(0), (SantePrediction) santes.get(0), client.getMediumsFavoris().get(0), client);
         
         System.out.println(client.getHoroscope().get(0).toString());
-        
-        
-        // Test suppression client
-        service.deleteClient(service.retrieveClient(29));
+        */       
     }
-    
-    /*
-     * Private (à priori non accessible directement)
-     * Pour créer un client en mode interactif
-     */
-    private  void createClient()
-    {
-
-    }
-
 }
